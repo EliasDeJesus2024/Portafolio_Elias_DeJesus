@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070b16">
+  <meta name="description" content="Portafolio personal, proyectos, habilidades y contacto.">
+  <title>My PORTFOLIO | Developer</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Iconos -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tipografías -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #070b16;
+      --bg-2: #0b1224;
+      --panel: rgba(13, 20, 38, .78);
+      --red: #d62839;
+      --red-soft: #ef4b5c;
+      --blue: #2a4fa8;
+      --blue-soft: #7d9bea;
+      --ink: #eef1f8;
+      --muted: #94a0ba;
+      --border: rgba(125, 155, 234, .16);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background-color: var(--bg);
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3.serif, .serif {
+      font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    }
+
+    /* Fondo: degradado sobrio + telaraña fija */
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(ellipse 60% 50% at 85% 0%, rgba(42, 79, 168, .28), transparent 70%),
+        radial-gradient(ellipse 50% 40% at 0% 100%, rgba(214, 40, 57, .14), transparent 70%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+    }
+
+    .web-bg {
+      position: fixed;
+      top: -140px;
+      right: -140px;
+      width: 760px;
+      height: 760px;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .55;
+    }
+
+    .web-corner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 110px;
+      height: 110px;
+      opacity: .5;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+
+    .card:hover .web-corner { opacity: 1; }
+
+    /* Texto con acento */
+    .accent-text {
+      color: var(--red-soft);
+      font-style: italic;
+    }
+
+    .eyebrow {
+      font-size: .72rem;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      color: var(--red-soft);
+      font-weight: 500;
+    }
+
+    .rule {
+      display: block;
+      width: 56px;
+      height: 2px;
+      margin-top: 18px;
+      background: linear-gradient(90deg, var(--red), var(--blue));
+    }
+
+    .glass {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      transition: transform .3s, border-color .3s, box-shadow .3s;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--red), var(--blue));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .4s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(239, 75, 92, .45);
+      box-shadow: 0 24px 50px -28px rgba(214, 40, 57, .45);
+    }
+
+    .card:hover::before { transform: scaleX(1); }
+
+    .tag {
+      font-size: .7rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #c8d2ea;
+      border: 1px solid var(--border);
+      background: rgba(42, 79, 168, .12);
+      padding: 5px 12px;
+    }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-size: .75rem;
+      font-weight: 500;
+      transition: background .2s, transform .2s, box-shadow .2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--red-soft);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px -14px rgba(214, 40, 57, .8);
+    }
+
+    .btn-ghost {
+      border: 1px solid rgba(125, 155, 234, .35);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-size: .75rem;
+      font-weight: 500;
+      transition: background .2s, border-color .2s;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(42, 79, 168, .2);
+      border-color: var(--blue-soft);
+    }
+
+    .section { scroll-margin-top: 90px; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .7s, transform .7s;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    input, textarea {
+      color: white;
+      background: rgba(8, 13, 27, .9);
+      border: 1px solid #1f2b4a;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--red-soft);
+      box-shadow: 0 0 0 3px rgba(214, 40, 57, .15);
+    }
+
+    .nav-link {
+      color: var(--muted);
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      position: relative;
+      transition: color .2s;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 0;
+      height: 1px;
+      background: var(--red-soft);
+      transition: width .25s;
+    }
+
+    .nav-link:hover { color: white; }
+    .nav-link:hover::after { width: 100%; }
+
+    .project-image {
+      min-height: 190px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(42, 79, 168, .35), transparent 62%),
+        #0a1020;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Bloque de código con barra roja */
+    .code-shell {
+      border-left: 3px solid var(--red);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="backdrop"></div>
+  <svg id="webBg" class="web-bg" viewBox="-400 -400 800 800" aria-hidden="true"></svg>
+
+  <!-- NAVBAR -->
+  <header class="fixed top-0 inset-x-0 z-50 border-b border-white/10
+                 bg-[#070b16]/90 backdrop-blur-xl">
+    <nav class="max-w-6xl mx-auto px-5 h-16 flex items-center
+                justify-between">
+      <a href="#inicio" class="serif font-bold text-2xl tracking-wide">
+        Elias<span class="text-[color:var(--red-soft)]">.</span>
+      </a>
+
+      <div class="hidden md:flex items-center gap-9">
+        <a class="nav-link" href="#sobre-mi">About</a>
+        <a class="nav-link" href="#proyectos">Projects</a>
+        <a class="nav-link" href="#tecnologias">Skills</a>
+        <a class="nav-link" href="#cursos">Courses</a>
+        <a class="nav-link" href="#contacto">Contact</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a id="githubTop" href="https://github.com/EliasDeJesus2024"
+           target="_blank" rel="noopener noreferrer"
+           aria-label="GitHub"
+           class="text-zinc-400 hover:text-white">
+          <i data-lucide="github" class="w-5 h-5"></i>
+        </a>
+
+        <button id="menuButton"
+                class="md:hidden text-zinc-300 p-2"
+                aria-label="Abrir menú"
+                aria-expanded="false">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </nav>
+
+    <div id="mobileMenu"
+         class="hidden md:hidden border-t border-white/10 p-5 space-y-4">
+      <a class="block nav-link" href="#sobre-mi">About</a>
+      <a class="block nav-link" href="#proyectos">Projects</a>
+      <a class="block nav-link" href="#tecnologias">Skills</a>
+      <a class="block nav-link" href="#contacto">Contact</a>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-5">
+
+    <!-- HERO -->
+    <section id="inicio"
+             class="section min-h-screen flex items-center pt-24 pb-16">
+      <div class="grid md:grid-cols-2 gap-14 items-center w-full">
+
+        <div class="reveal">
+          <p class="eyebrow mb-6">Hello, world!</p>
+
+          <h1 class="text-6xl sm:text-7xl lg:text-8xl font-semibold
+                     tracking-tight leading-[1]">
+            I'm <span id="heroName">Elias</span><br>
+            <span class="accent-text" id="heroRole">Developer.</span>
+          </h1>
+
+          <span class="rule"></span>
+
+          <p class="text-zinc-400 mt-7 leading-8 max-w-lg">
+            I create digital experiences and turn ideas into creative solutions.
+          </p>
+
+          <div class="flex flex-wrap gap-3 mt-8">
+            <a href="#proyectos"
+               class="btn-primary px-6 py-3.5 inline-flex items-center gap-2">
+              View my work
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </a>
+
+            <a href="https://github.com/EliasDeJesus2024"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="btn-ghost px-6 py-3.5 inline-flex items-center justify-center gap-2">
+  GitHub
+</a>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mt-8">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">Figma</span>
+            <span class="tag">Tailwind CSS</span>
+          </div>
+        </div>
+
+        <!-- TARJETA DE CÓDIGO -->
+        <div class="reveal">
+          <div class="glass code-shell overflow-hidden shadow-2xl
+                      shadow-black/40">
+            <div class="h-12 border-b border-white/10 flex items-center
+                        justify-between px-4">
+              <div class="flex gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#d62839]"></span>
+                <span class="w-3 h-3 rounded-full bg-[#2a4fa8]"></span>
+                <span class="w-3 h-3 rounded-full bg-zinc-300"></span>
+              </div>
+              <span class="text-xs text-zinc-500 tracking-widest">developer.js</span>
+              <i data-lucide="code-2" class="w-4 h-4 text-[color:var(--red-soft)]"></i>
+            </div>
+
+            <pre class="p-6 text-sm leading-8 overflow-x-auto"><code><span class="text-[#ef4b5c]">const</span> developer = {
+  <span class="text-sky-300">name</span>: <span class="text-zinc-100">"Elias"</span>,
+  <span class="text-sky-300">role</span>: <span class="text-zinc-100">"Web Developer"</span>,
+  <span class="text-sky-300">creative</span>: <span class="text-[#ef4b5c]">true</span>,
+  <span class="text-sky-300">passion</span>: <span class="text-zinc-100">"Building ideas"</span>,
+
+  <span class="text-[#ef4b5c]">sayHello</span>() {
+    <span class="text-[#ef4b5c]">return</span> <span class="text-zinc-100">"Hello, world!"</span>;
+  }
+};</code></pre>
+
+            <div class="border-t border-white/10 p-4 flex gap-2
+                        items-center text-xs text-zinc-400 tracking-wider">
+              <span class="w-2 h-2 rounded-full bg-[#ef4b5c]"></span>
+              Available for new projects
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+   
+
+<!-- ABOUT -->
+<section id="sobre-mi" class="section py-24">
+  <div class="reveal">
+    <p class="eyebrow mb-4">01 / About me</p>
+
+    <h2 class="text-4xl sm:text-5xl font-semibold">
+      Who is <span class="accent-text">Elias?</span>
+    </h2>
+
+    <span class="rule"></span>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-5 mt-10">
+
+    <!-- Main About Me Card -->
+    <div class="md:col-span-2 card p-8 reveal relative overflow-hidden">
+      <svg class="web-corner" viewBox="0 0 110 110" data-corner></svg>
+
+      <h3 class="serif text-2xl font-semibold mb-4 relative z-10">
+        Development, creativity, and learning.
+      </h3>
+
+      <p class="text-zinc-400 leading-8 relative z-10">
+        I'm a creative and curious student passionate about technology,
+        photography, and learning new skills. I enjoy exploring digital
+        tools, creating content, and turning ideas into reality while
+        preparing for my future in psychology.
+      </p>
+
+      <p class="text-zinc-400 leading-8 mt-4 relative z-10">
+        I'm developing my skills, exploring new ideas, and learning
+        about technology, photography, and content creation.
+      </p>
+    </div>
+
+    <!-- Profile Card -->
+    <div class="card reveal relative overflow-hidden p-0 flex flex-col">
+
+      <svg class="web-corner" viewBox="0 0 110 110" data-corner></svg>
+
+      <!-- Large Profile Photo -->
+      <div class="relative w-full h-80 sm:h-96 overflow-hidden">
+        <img
+          src="images/mifoto.png"
+          alt="Elias - Personal Profile"
+          class="w-full h-full object-cover object-center"
+        />
+
+        <!-- Dark Gradient Overlay -->
+        <div
+          class="absolute inset-0 bg-gradient-to-t
+                 from-black/80 via-black/10 to-transparent">
+        </div>
+      </div>
+
+      <!-- Professional Title at Bottom -->
+      <div class="relative z-10 p-6 mt-auto">
+
+        <h3 class="serif font-semibold text-2xl leading-tight">
+          UI/UX Designer
+          <span class="text-[color:var(--red-soft)]">&</span>
+          <br />
+          Web Developer
+        </h3>
+
+        <!-- Description -->
+        <p class="text-sm text-zinc-400 mt-4 leading-7">
+          Exploring the intersection of design and technology to create
+          intuitive, engaging, and user-centered digital experiences.
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+    <!-- PROJECTS -->
+    <section id="proyectos" class="section py-24">
+      <div class="reveal">
+        <p class="eyebrow mb-4">02 / Some Projects</p>
+        <h2 class="text-4xl sm:text-5xl font-semibold">
+          Projects <span class="accent-text">Featured.</span>
+        </h2>
+        <span class="rule"></span>
+        <p class="text-zinc-400 mt-5">
+          A selection of my work and digital experiments.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-10">
+<!-- Primer año Proyecto -->
+        <article class="card reveal">
+          <div class="project-image">
+            <div class=" text-zinc-900 shadow-xl w-4/5 p-5
+                        border-t-4 border-[#d62839]">
+              <div class="text-xs text-[#d62839] font-bold mb-3 tracking-widest uppercase">
+                First Year
+              </div>
+              <div class="w-full h-full overflow-hidden">
+                <img src="images/Empowermomslogo.png" alt="Empowermoms">
+              </div>
+            </div>
+          </div>
+
+          <div class="p-7">
+            <div class="flex justify-between gap-3 items-start">
+              <span class="eyebrow !tracking-[.2em] whitespace-nowrap;">¡Supérate! Hilasal</span>
+            </div>
+            <p class="text-sm text-zinc-400 leading-7 mt-3">
+              A Power Apps platform designed to help mothers find their first job and access new employment opportunities.
+            </p>
+            <div class="flex flex-wrap gap-2 mt-5">
+              <span class="tag">Power Apps</span>
+              <span class="tag">Figma</span>
+            </div>
+            <a href="https://www.figma.com/design/UK59HHqMS1ckeraAJ14A0i/Untitled?node-id=0-1&t=7IgBvK8Va1XS3Z4c-1"
+               class="inline-flex gap-2 items-center mt-6 text-xs tracking-[.2em]
+                      uppercase text-[color:var(--red-soft)] hover:text-white transition">
+              View Project
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </article>
+<!-- Segundo año Proyecto-->
+         <article class="card reveal">
+          <div class="project-image">
+            <div class="text-zinc-900 shadow-xl w-4/5 p-5
+                        border-t-4 border-[#d62839]">
+              <div class="text-xs text-[#d62839] font-bold mb-3 tracking-widest uppercase">
+                    Second Year
+              </div>
+              <div class="w-full h-full overflow-hidden">
+               <img src="images/teachmenow.png" alt="teachmenow">
+              </div>
+            </div>
+          </div>
+
+          <div class="p-7">
+            <div class="flex justify-between gap-3 items-start">
+              <span class="eyebrow !tracking-[.2em] whitespace-nowrap">¡Supérate! Hilasal</span>
+            </div>
+            <p class="text-sm text-zinc-400 leading-7 mt-3">
+              TechMeNow is an AI-powered platform designed to help teachers create curricula, assessments, and exams more efficiently.
+            </p>
+            <div class="flex flex-wrap gap-2 mt-5">
+              <span class="tag">Prisma</span>
+              <span class="tag">Clerk</span>
+              <span class="tag">JavaScript</span>
+            </div>
+            <a href="#contacto"
+               class="inline-flex gap-2 items-center mt-6 text-xs tracking-[.2em]
+                      uppercase text-[color:var(--red-soft)] hover:text-white transition">
+              View Project
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </article>
+<!-- Tercer año Proyecto -->
+         <article class="card reveal">
+          <div class="project-image">
+            <div class=" text-zinc-900 shadow-xl w-4/5 p-5
+                        border-t-4 border-[#d62839]">
+              <div class="text-xs text-[#d62839] font-bold mb-3 tracking-widest uppercase">
+                Third Year
+              </div>
+              <div class="w-full h-full overflow-hidden">
+                <img src="images/valtrustlogo.png" alt=Valtrust">
+              </div>
+            </div>
+          </div>
+
+          <div class="p-7">
+            <div class="flex justify-between gap-3 items-start">
+              <span class="eyebrow !tracking-[.2em] whitespace-nowrap">¡Supérate! Hilasal</span>
+            </div>
+            <p class="text-sm text-zinc-400 leading-7 mt-3">
+              ValTrust is a platform designed to help buyers and sellers find and sell homes through fair, transparent, and legally secure transactions.
+            </p>
+            <div class="flex flex-wrap gap-2 mt-5">
+              <span class="tag">Next.js</span>
+              <span class="tag">Supabase </span>
+              <span class="tag">Tesseract OCR</span>
+            </div>
+            <a href="https://valtrust-website.vercel.app/"
+               class="inline-flex gap-2 items-center mt-6 text-xs tracking-[.2em]
+                      uppercase text-[color:var(--red-soft)] hover:text-white transition">
+              View Project
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- TECH STACK -->
+    <section id="tecnologias" class="section py-24">
+      <div class="reveal">
+        <p class="eyebrow mb-4">03 / Skills</p>
+        <h2 class="text-4xl sm:text-5xl font-semibold">
+          Tech <span class="accent-text">Stack.</span>
+        </h2>
+        <span class="rule"></span>
+        <p class="text-zinc-400 mt-5">
+          Tools and technologies that I use or am learning.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
+
+        <div class="card p-7 reveal">
+          <svg class="web-corner" viewBox="0 0 110 110" data-corner></svg>
+          <i data-lucide="monitor" class="text-[color:var(--red-soft)] w-7 h-7"></i>
+          <h3 class="serif text-xl font-semibold mt-4">Frontend</h3>
+          <p class="text-sm text-zinc-500 mt-2">Interfaces and web design</p>
+          <div class="flex flex-wrap gap-2 mt-4">
+            <span class="tag">HTML5</span>
+            <span class="tag">CSS</span>
+            <span class="tag">Tailwind</span>
+          </div>
+        </div>
+
+
+        <div class="card p-7 reveal">
+          <svg class="web-corner" viewBox="0 0 110 110" data-corner></svg>
+          <i data-lucide="git-branch" class="text-[color:var(--red-soft)] w-7 h-7"></i>
+          <h3 class="serif text-xl font-semibold mt-4">Version Control</h3>
+          <p class="text-sm text-zinc-500 mt-2">Control and collaboration</p>
+          <div class="flex flex-wrap gap-2 mt-4">
+            <span class="tag">Git</span>
+            <span class="tag">GitHub</span>
+          </div>
+        </div>
+
+        <div class="card p-7 reveal">
+          <svg class="web-corner" viewBox="0 0 110 110" data-corner></svg>
+          <i data-lucide="workflow" class="text-[color:var(--red-soft)] w-7 h-7"></i>
+          <h3 class="serif text-xl font-semibold mt-4">Automation</h3>
+          <p class="text-sm text-zinc-500 mt-2">Process automation</p>
+          <div class="flex flex-wrap gap-2 mt-4">
+            <span class="tag">n8n</span>
+            <span class="tag">AI Tools</span>
+          </div>
+        </div>
+
+        <div class="card p-7 reveal">
+          <svg class="web-corner" viewBox="0 0 110 110" data-corner></svg>
+          <i data-lucide="palette" class="text-[color:var(--red-soft)] w-7 h-7"></i>
+          <h3 class="serif text-xl font-semibold mt-4">Design</h3>
+          <p class="text-sm text-zinc-500 mt-2">Visual creativity</p>
+          <div class="flex flex-wrap gap-2 mt-4">
+            <span class="tag">Canva</span>
+            <span class="tag">Figma</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- Courses -->
+    <section id="cursos" class="section py-24">
+      <div class="reveal">
+        <p class="eyebrow mb-4">04 / Some Courses</p>
+        <h2 class="text-4xl sm:text-5xl font-semibold">
+          Courses <span class="accent-text">& Certifications.</span>
+        </h2>
+        <span class="rule"></span>
+        <p class="text-zinc-400 mt-5">
+          A selection of my courses and professional certifications.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-10">
+<!-- Primer curso-->
+        <article class="card reveal">
+          <div class="project-image">
+            <div class=" text-zinc-900 shadow-xl w-4/5 p-5
+                        border-t-4 border-[#d62839]">
+             
+              <div class="w-full h-full overflow-hidden">
+               <img src="images/AIcapabilitiesandlimitations.png" alt="AIcapabilitiesandlimitations">
+              </div>
+            </div>
+          </div>
+
+          <div class="p-7">
+            <div class="flex justify-between gap-3 items-start">
+              <span class="eyebrow !tracking-[.2em] whitespace-nowrap;">AI Capabilities And Limitations</span>
+            </div>
+            <p class="text-sm text-zinc-400 leading-7 mt-3">
+              AI Capabilities and Limitations is an introductory course by Anthropic that explains how large language models work, what they can do well, and where they have limitations. It covers next-token prediction, model knowledge, working memory, and steerability, helping learners use AI more effectively and critically in work and studies.
+            </p>
+            <a href="https://academy.claude.com/verify/757affecc0e59341ce2a841e0031b0a4"
+               class="inline-flex gap-2 items-center mt-6 text-xs tracking-[.2em]
+                      uppercase text-[color:var(--red-soft)] hover:text-white transition">
+              View Certificate
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </article>
+<!-- Segundo curso-->
+         <article class="card reveal">
+          <div class="project-image">
+            <div class="text-zinc-900 shadow-xl w-4/5 p-5
+                        border-t-4 border-[#d62839]">
+        
+              <div class="w-full h-full overflow-hidden">
+                <img src="images/claudecodeinaction.png" alt="claudecodeinaction" >
+              </div>
+        
+          </div>
+
+          <div class="p-7">
+            <div class="flex justify-between gap-3 items-start">
+              <span class="eyebrow !tracking-[.2em] whitespace-nowrap">Claude Code In Action</span>
+            </div>
+            <p class="text-sm text-zinc-400 leading-7 mt-3">
+              Claude Code in Action is an advanced course by Anthropic that teaches developers how to manage long-running AI coding tasks, automate repetitive workflows, and configure Claude Code for team collaboration. It covers autonomous sessions, custom skills, permission controls, hooks, scheduled routines, GitHub Actions, and code verification to ensure reliable results with less supervision.
+            </p>
+            <a href="https://academy.claude.com/verify/6be89e7bc2378b679f89a87629ffbda1"
+               class="inline-flex gap-2 items-center mt-6 text-xs tracking-[.2em]
+                      uppercase text-[color:var(--red-soft)] hover:text-white transition">
+              View Certificate
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </article>
+<!-- Tercer curso-->
+         <article class="card reveal">
+          <div class="project-image">
+            <div class="text-zinc-900 shadow-xl w-4/5 p-5
+                        border-t-4 border-[#d62839]">
+             
+              <div class="w-full h-full overflow-hidden">
+              <img src="images/claudecode.png" alt="ClaudeCode">
+              </div>
+            </div>
+          </div>
+
+          <div class="p-7">
+            <div class="flex justify-between gap-3 items-start">
+              <span class="eyebrow !tracking-[.2em] whitespace-nowrap">¡Supérate! Hilasal</span>
+            </div>
+            <p class="text-sm text-zinc-400 leading-7 mt-3">
+              Claude Code 101 is a course by Anthropic that teaches developers how to use Claude Code, an AI-powered coding agent that can read, edit, and manage code directly in a project. It covers installation, effective prompting, debugging, code review, context management, subagents, MCP servers, and workflow automation to build software more efficiently.
+            </p>
+            <a href="https://academy.claude.com/verify/9c0d938803a704e1acf7981fd6afc274"
+               class="inline-flex gap-2 items-center mt-6 text-xs tracking-[.2em]
+                      uppercase text-[color:var(--red-soft)] hover:text-white transition">
+              View Certificate
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+
+
+    
+    <!-- CONTACT -->
+    <section id="contacto" class="section py-24">
+      <div class="reveal">
+        <p class="eyebrow mb-4">05 / Get in touch</p>
+        <h2 class="text-4xl sm:text-5xl font-semibold">
+          Let's <span class="accent-text">Connect.</span>
+        </h2>
+        <span class="rule"></span>
+        <p class="text-zinc-400 mt-5 max-w-xl">
+          Do you have an idea or a project? Write to me and let’s talk.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-12 mt-12">
+        <div class="space-y-7 reveal">
+          <div class="flex gap-4 items-center">
+            <div class="glass p-3 text-[color:var(--red-soft)]">
+              <i data-lucide="mail" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="eyebrow !text-zinc-500">Email</p>
+              <p id="emailDisplay" class="text-sm mt-1">
+                youremail@example.com
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-4 items-center">
+            <div class="glass p-3 text-[color:var(--red-soft)]">
+              <i data-lucide="map-pin" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="eyebrow !text-zinc-500">location</p>
+              <p class="text-sm mt-1">El Salvador</p>
+            </div>
+          </div>
+          <div class="flex gap-4 items-center">
+            <div>
+              <p class="eyebrow !text-zinc-500">GitHub</p>
+              <a id="githubDisplay" href="https://github.com/"
+                 target="_blank" rel="noopener noreferrer"
+                 class="text-sm text-[color:var(--blue-soft)] hover:text-white mt-1 inline-block">
+                View my projects
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <form id="contactForm" class="space-y-5 reveal">
+          <div>
+            <label for="name" class="eyebrow !text-zinc-400 block mb-2">Your name</label>
+            <input id="name" name="name" type="text" required
+                   minlength="2" maxlength="80"
+                   autocomplete="name"
+                   placeholder="Escribe tu nombre"
+                   class="w-full px-4 py-3 text-sm">
+          </div>
+
+          <div>
+            <label for="email" class="eyebrow !text-zinc-400 block mb-2">Your Email</label>
+            <input id="email" name="email" type="email" required
+                   maxlength="150" autocomplete="email"
+                   placeholder="correo@ejemplo.com"
+                   class="w-full px-4 py-3 text-sm">
+          </div>
+
+          <div>
+            <label for="message" class="eyebrow !text-zinc-400 block mb-2">Message</label>
+            <textarea id="message" name="message" required
+                      minlength="5" maxlength="3000" rows="5"
+                      placeholder="Teld me about your Project..."
+                      class="w-full px-4 py-3 text-sm resize-y"></textarea>
+          </div>
+
+          <button type="submit"
+                  class="btn-primary px-6 py-3.5 inline-flex items-center gap-2">
+            Send Message
+            <i data-lucide="send" class="w-4 h-4"></i>
+          </button>
+
+          <p id="formStatus" role="status" aria-live="polite"
+             class="text-sm text-zinc-400"></p>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/10 mt-10">
+    <div class="max-w-6xl mx-auto px-5 py-8 flex flex-col
+                sm:flex-row justify-between gap-4 text-xs tracking-widest
+                uppercase text-zinc-500">
+      <p>© <span id="year"></span> Elias De Jesús.All rights reserved.</p>
+      <a href="#inicio" class="hover:text-[color:var(--red-soft)]">
+        Back to top
+      </a>
+    </div>
+  </footer>
+
+  <script>
+
+    const CONFIG = {
+      name: "Elias",
+      role: "Developer",
+      email: "eliasdejesus0177@gmail.com",
+      github: "https://github.com/EliasDeJesus2024"
+    };
+
+    document.title = `${CONFIG.name} | Portafolio`;
+
+    document.getElementById("heroName").textContent = CONFIG.name;
+    document.getElementById("heroRole").textContent = CONFIG.role;
+    document.getElementById("emailDisplay").textContent = CONFIG.email;
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    document.getElementById("githubTop").href = CONFIG.github;
+    document.getElementById("githubDisplay").href = CONFIG.github;
+
+    
+    function buildWeb(svg, { cx, cy, radials, rings, maxR, startAngle, endAngle, stroke, width }) {
+      const NS = "http://www.w3.org/2000/svg";
+      const angles = [];
+      for (let i = 0; i < radials; i++) {
+        angles.push(startAngle + (endAngle - startAngle) * (i / (radials - 1)));
+      }
+      const pt = (r, a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+
+      
+      angles.forEach(a => {
+        const [x, y] = pt(maxR, a);
+        const line = document.createElementNS(NS, "line");
+        line.setAttribute("x1", cx); line.setAttribute("y1", cy);
+        line.setAttribute("x2", x);  line.setAttribute("y2", y);
+        line.setAttribute("stroke", stroke);
+        line.setAttribute("stroke-width", width);
+        svg.appendChild(line);
+      });
+
+      
+      for (let k = 1; k <= rings; k++) {
+        const r = (maxR * k) / rings;
+        let d = "";
+        for (let i = 0; i < angles.length; i++) {
+          const [x, y] = pt(r, angles[i]);
+          if (i === 0) { d += `M ${x.toFixed(1)} ${y.toFixed(1)}`; continue; }
+          const mid = (angles[i] + angles[i - 1]) / 2;
+          const [qx, qy] = pt(r * 0.86, mid);
+          d += ` Q ${qx.toFixed(1)} ${qy.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}`;
+        }
+        const path = document.createElementNS(NS, "path");
+        path.setAttribute("d", d);
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", stroke);
+        path.setAttribute("stroke-width", width);
+        svg.appendChild(path);
+      }
+    }
+
+    buildWeb(document.getElementById("webBg"), {
+      cx: 0, cy: 0,
+      radials: 11, rings: 9, maxR: 380,
+      startAngle: Math.PI * 0.02, endAngle: Math.PI * 0.98,
+      stroke: "#7d9bea", width: 0.8
+    });
+
+    
+    document.querySelectorAll("[data-corner]").forEach(svg => {
+      buildWeb(svg, {
+        cx: 0, cy: 0,
+        radials: 5, rings: 4, maxR: 105,
+        startAngle: 0.04, endAngle: Math.PI / 2 - 0.04,
+        stroke: "#ef4b5c", width: 0.7
+      });
+    });
+
+    // Iconos
+    lucide.createIcons();
+
+    // Menú móvil
+    const menuButton = document.getElementById("menuButton");
+    const mobileMenu = document.getElementById("mobileMenu");
+
+    menuButton.addEventListener("click", () => {
+      const isOpening = mobileMenu.classList.contains("hidden");
+      mobileMenu.classList.toggle("hidden");
+      menuButton.setAttribute("aria-expanded", String(isOpening));
+      menuButton.innerHTML = isOpening
+        ? '<i data-lucide="x" class="w-5 h-5"></i>'
+        : '<i data-lucide="menu" class="w-5 h-5"></i>';
+      lucide.createIcons();
+    });
+
+    mobileMenu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        mobileMenu.classList.add("hidden");
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.innerHTML =
+          '<i data-lucide="menu" class="w-5 h-5"></i>';
+        lucide.createIcons();
+      });
+    });
+
+    // Animaciones al desplazarse
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll(".reveal").forEach(element => {
+      observer.observe(element);
+    });
+
+    // Formulario de contacto
+    // Abre la aplicación de correo
+    const form = document.getElementById("contactForm");
+    const formStatus = document.getElementById("formStatus");
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      if (!form.reportValidity()) return;
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      if (!name || !email || !message) {
+        formStatus.textContent = "Fill in all the fields.";
+        return;
+      }
+
+      const subject = encodeURIComponent(
+        `Message from my portfolio - ${name}`
+      );
+
+      const body = encodeURIComponent(
+        `Name: ${name}\nE-mail: ${email}\n\nMessage:\n${message}`
+      );
+
+      formStatus.textContent =
+        "Opening your email application to prepare the message...";
+
+      window.location.href =
+        `mailto:${CONFIG.email}?subject=${subject}&body=${body}`;
+    });
+  </script>
+</body>
+</html>

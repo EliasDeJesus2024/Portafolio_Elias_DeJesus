@@ -58,16 +58,8 @@
         linear-gradient(180deg, var(--bg), var(--bg-2));
     }
 
-    .web-bg {
-      position: fixed;
-      top: -140px;
-      right: -140px;
-      width: 760px;
-      height: 760px;
-      z-index: -1;
-      pointer-events: none;
-      opacity: .55;
-    }
+    
+    
 
     .web-corner {
       position: absolute;
@@ -248,7 +240,7 @@
 
 <body>
   <div class="backdrop"></div>
-  <svg id="webBg" class="web-bg" viewBox="-400 -400 800 800" aria-hidden="true"></svg>
+
 
   <!-- NAVBAR -->
   <header class="fixed top-0 inset-x-0 z-50 border-b border-white/10
@@ -900,12 +892,8 @@
       }
     }
 
-    buildWeb(document.getElementById("webBg"), {
-      cx: 0, cy: 0,
-      radials: 11, rings: 9, maxR: 380,
-      startAngle: Math.PI * 0.02, endAngle: Math.PI * 0.98,
-      stroke: "#7d9bea", width: 0.8
-    });
+    
+    ;
 
     
     document.querySelectorAll("[data-corner]").forEach(svg => {
